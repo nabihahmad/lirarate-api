@@ -7,18 +7,18 @@ const CyclicDb = require("cyclic-dynamodb")
 const db = CyclicDb("rich-ruby-camel-robeCyclicDB")
 const lirarateDB = db.collection("lirarate")
 
-app.all('/lirarate', async (req, res) => {
+app.get('/lirarate', async (req, res) => {
 	let responseJson = {};
 	if (process.env.DISABLE_SCRIPT == "false") {
-    let requestBody = req.body;
+		let requestBody = req.body;
 
-    let lirarateStatus = await lirarateDB.get("status")
+		let lirarateStatus = await lirarateDB.get("status")
 
-    let pattern = lirarateStatus != null && lirarateStatus.props != null && lirarateStatus.props.pattern != null ? lirarateStatus.props.pattern : ["D"];
-    console.log("pattern", pattern);
+		let pattern = lirarateStatus != null && lirarateStatus.props != null && lirarateStatus.props.pattern != null ? lirarateStatus.props.pattern : ["D"];
+		console.log("pattern", pattern);
 
-    let lirarate = lirarateStatus != null && lirarateStatus.props != null && lirarateStatus.props.lirarate != null ? lirarateStatus.props.lirarate : 1500;
-    console.log("lirarate", lirarate);
+		let lirarate = lirarateStatus != null && lirarateStatus.props != null && lirarateStatus.props.lirarate != null ? lirarateStatus.props.lirarate : 1500;
+		console.log("lirarate", lirarate);
 
 		getLiraRate(pattern, lirarate);
 		
@@ -32,14 +32,14 @@ app.all('/lirarate', async (req, res) => {
 	res.send(JSON.stringify(responseJson));
 });
 app.get('/lirarate-pattern', async (req, res) => {
-    let responseJson = {};
-    let requestBody = req.body;
+		let responseJson = {};
+		let requestBody = req.body;
 
-    let lirarateStatus = await lirarateDB.get("status");
-    responseJson.status = "success";
-    responseJson.pattern = lirarateStatus != null && lirarateStatus.props != null && lirarateStatus.props.pattern != null ? lirarateStatus.props.pattern : null;
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify(responseJson));
+		let lirarateStatus = await lirarateDB.get("status");
+		responseJson.status = "success";
+		responseJson.pattern = lirarateStatus != null && lirarateStatus.props != null && lirarateStatus.props.pattern != null ? lirarateStatus.props.pattern : null;
+		res.setHeader('Content-Type', 'application/json');
+		res.send(JSON.stringify(responseJson));
 })
 app.listen(process.env.PORT || 3000)
 
@@ -122,13 +122,13 @@ function getLiraRate(pattern, lirarate) {
 				console.log("pattern", pattern, patternUpdated, lirarate, sell);
 
 				if (patternUpdated) {
-          console.log("updatingPattern", pattern, sell);
-          let lirarateStatus = await lirarateDB.set("status", {
-              pattern: pattern,
-              lirarate: sell
-          });
-          console.log("lirarateStatus", lirarateStatus);
-        }
+					console.log("updatingPattern", pattern, sell);
+					let lirarateStatus = await lirarateDB.set("status", {
+							pattern: pattern,
+							lirarate: sell
+					});
+					console.log("lirarateStatus", lirarateStatus);
+				}
 			}
 		});
 	});
