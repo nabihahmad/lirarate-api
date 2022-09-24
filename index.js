@@ -40,7 +40,7 @@ app.get('/lirarate-pattern', async (req, res) => {
 		responseJson.pattern = lirarateStatus != null && lirarateStatus.props != null && lirarateStatus.props.pattern != null ? lirarateStatus.props.pattern : null;
 		res.setHeader('Content-Type', 'application/json');
 		res.send(JSON.stringify(responseJson));
-})
+});
 app.listen(process.env.PORT || 3000)
 
 function iftttWebhook(jsonData) {
