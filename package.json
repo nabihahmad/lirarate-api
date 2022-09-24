@@ -17,8 +17,8 @@
   },
   "homepage": "https://github.com/nabihahmad/lirarate-api#readme",
   "dependencies": {
+    "cyclic-dynamodb": "^0.0.27",
     "dotenv": "^16.0.1",
-    "express": "^4.18.1",
-    "node-cache": "^5.1.2"
+    "express": "^4.18.1"
   }
 }

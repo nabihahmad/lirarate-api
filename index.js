@@ -1,21 +1,24 @@
 const express = require('express');
 const app = express();
+app.use(express.json())
 require('dotenv').config();
 const https = require("https");
-const NodeCache = require("node-cache");
-const cache = new NodeCache();
+const CyclicDb = require("cyclic-dynamodb")
+const db = CyclicDb("rich-ruby-camel-robeCyclicDB")
+const lirarateDB = db.collection("lirarate")
 
 app.all('/lirarate', async (req, res) => {
 	let responseJson = {};
 	if (process.env.DISABLE_SCRIPT == "false") {
-		let pattern = cache.get("pattern");
-		if (pattern == null) {
-			pattern = ["D"];
-			cache.set("pattern", pattern);
-			cache.set("lirarate", 1500);
-		}
-		let lirarate = cache.get("lirarate");
-    console.log('pattern and lirarate', pattern, lirarate);
+    let requestBody = req.body;
+
+    let lirarateStatus = await lirarateDB.get("status")
+
+    let pattern = lirarateStatus != null && lirarateStatus.props != null && lirarateStatus.props.pattern != null ? lirarateStatus.props.pattern : ["D"];
+    console.log("pattern", pattern);
+
+    let lirarate = lirarateStatus != null && lirarateStatus.props != null && lirarateStatus.props.lirarate != null ? lirarateStatus.props.lirarate : 1500;
+    console.log("lirarate", lirarate);
 
 		getLiraRate(pattern, lirarate);
 		
@@ -28,6 +31,16 @@ app.all('/lirarate', async (req, res) => {
 	res.setHeader('Content-Type', 'application/json');
 	res.send(JSON.stringify(responseJson));
 });
+app.get('/lirarate-pattern', async (req, res) => {
+    let responseJson = {};
+    let requestBody = req.body;
+
+    let lirarateStatus = await lirarateDB.get("status");
+    responseJson.status = "success";
+    responseJson.pattern = lirarateStatus != null && lirarateStatus.props != null && lirarateStatus.props.pattern != null ? lirarateStatus.props.pattern : null;
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(responseJson));
+})
 app.listen(process.env.PORT || 3000)
 
 function iftttWebhook(jsonData) {
@@ -78,12 +91,11 @@ function getLiraRate(pattern, lirarate) {
 			body += d;
 		})
 
-		res.on('end', function(){
+		res.on('end', async function(){
 			var jsonResponse = JSON.parse(body);
 			if (jsonResponse != null) {
 				let lastUpdatedSince = jsonResponse.lastUpdatedSince;
 				let sell = jsonResponse.sell;
-				cache.set("lirarate", sell);
 				let patternUpdated = false;
 
 				if (pattern.length > 2 && pattern[pattern.length - 1] == "D" && pattern[pattern.length - 2] == "D" && pattern[pattern.length - 3] == "D" && sell > lirarate) {
@@ -109,8 +121,14 @@ function getLiraRate(pattern, lirarate) {
 
 				console.log("pattern", pattern, patternUpdated, lirarate, sell);
 
-				if (patternUpdated)
-					cache.set("pattern", pattern);
+				if (patternUpdated) {
+          console.log("updatingPattern", pattern, sell);
+          let lirarateStatus = await lirarateDB.set("status", {
+              pattern: pattern,
+              lirarate: sell
+          });
+          console.log("lirarateStatus", lirarateStatus);
+        }
 			}
 		});
 	});
