@@ -20,7 +20,7 @@ app.get('/lirarate', async (req, res) => {
 		let lirarate = lirarateStatus != null && lirarateStatus.props != null && lirarateStatus.props.lirarate != null ? lirarateStatus.props.lirarate : 1500;
 		console.log("lirarate", lirarate);
 
-		getLiraRate(pattern, lirarate);
+		await getLiraRate(pattern, lirarate);
 		
 		console.log("Script done!")
 		responseJson.status = "success";
@@ -71,9 +71,7 @@ function iftttWebhook(jsonData) {
 }
 
 function getLiraRate(pattern, lirarate) {
-  console.log("getLiraRate", pattern, lirarate);
 	const data = JSON.stringify({"testKey": "testValue"});
-  console.log("data", data);
 
 	const postOptions = {
 		hostname: 'api.scriptrapps.io',
@@ -86,18 +84,14 @@ function getLiraRate(pattern, lirarate) {
 		}
 	}
 
-  console.log("postOptions1");
 	const req = https.request(postOptions, res => {
-    console.log("postOptions2");
 		var body = '';
 
 		res.on('data', d => {
-      console.log("on data");
 			body += d;
 		})
 
 		res.on('end', async function(){
-      console.log("on end");
 			var jsonResponse = JSON.parse(body);
 			if (jsonResponse != null) {
 				let lastUpdatedSince = jsonResponse.lastUpdatedSince;
