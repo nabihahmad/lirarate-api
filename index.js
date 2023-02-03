@@ -71,6 +71,7 @@ function iftttWebhook(jsonData) {
 }
 
 function getLiraRate(pattern, lirarate) {
+  console.log("getLiraRate", pattern, lirarate);
 	const data = JSON.stringify({});
 
 	const postOptions = {
@@ -85,6 +86,7 @@ function getLiraRate(pattern, lirarate) {
 	}
 
 	const req = https.request(postOptions, res => {
+    console.log("request", postOptions);
 		var body = '';
 
 		res.on('data', d => {
@@ -92,6 +94,7 @@ function getLiraRate(pattern, lirarate) {
 		})
 
 		res.on('end', async function(){
+      console.log("body", body);
 			var jsonResponse = JSON.parse(body);
 			if (jsonResponse != null) {
 				let lastUpdatedSince = jsonResponse.lastUpdatedSince;
