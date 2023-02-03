@@ -72,7 +72,7 @@ function iftttWebhook(jsonData) {
 
 function getLiraRate(pattern, lirarate) {
   console.log("getLiraRate", pattern, lirarate);
-	const data = JSON.stringify({});
+	const data = JSON.stringify({"testKey": "testValue"});
   console.log("data", data);
 
 	const postOptions = {
