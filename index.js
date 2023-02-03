@@ -90,6 +90,7 @@ function getLiraRate(pattern, lirarate) {
 		var body = '';
 
 		res.on('data', d => {
+      console.log("data", d);
 			body += d;
 		})
 
