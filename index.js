@@ -73,6 +73,7 @@ function iftttWebhook(jsonData) {
 function getLiraRate(pattern, lirarate) {
   console.log("getLiraRate", pattern, lirarate);
 	const data = JSON.stringify({});
+  console.log("data", data);
 
 	const postOptions = {
 		hostname: 'api.scriptrapps.io',
@@ -85,8 +86,9 @@ function getLiraRate(pattern, lirarate) {
 		}
 	}
 
+  console.log("postOptions1", postOptions);
 	const req = https.request(postOptions, res => {
-    console.log("request", postOptions);
+    console.log("postOptions2", postOptions);
 		var body = '';
 
 		res.on('data', d => {
