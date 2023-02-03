@@ -86,18 +86,18 @@ function getLiraRate(pattern, lirarate) {
 		}
 	}
 
-  console.log("postOptions1", postOptions);
+  console.log("postOptions1");
 	const req = https.request(postOptions, res => {
-    console.log("postOptions2", postOptions);
+    console.log("postOptions2");
 		var body = '';
 
 		res.on('data', d => {
-      console.log("data", d);
+      console.log("on data");
 			body += d;
 		})
 
 		res.on('end', async function(){
-      console.log("body", body);
+      console.log("on end");
 			var jsonResponse = JSON.parse(body);
 			if (jsonResponse != null) {
 				let lastUpdatedSince = jsonResponse.lastUpdatedSince;
