@@ -10,6 +10,7 @@ const lirarateDB = db.collection("lirarate")
 app.get('/lirarate', async (req, res) => {
 	let checkTime = req.query.time;
 	if (checkTime != null) {
+		/*
 		var strDate = checkTime.split(", ")[0];
 		var strDay = strDate.split("/")[0];
 		var strMonth = strDate.split("/")[1];
@@ -21,6 +22,8 @@ app.get('/lirarate', async (req, res) => {
 			strHour = parseInt(strHour) + 12;
 		var strMinute = strTime.split(":")[1].split(" ")[0];
 		checkTime = new Date(strYear+"-"+strMonth+"-"+strDay+"T"+strHour+":"+strMinute);
+		*/
+		checkTime = newDate(checkTime);
 	}
 
 	let responseJson = {};
