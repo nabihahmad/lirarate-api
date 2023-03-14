@@ -161,6 +161,8 @@ function parseLiraRate(jsonResponse, checkTime) {
             
             if (buyRateDate != null && sellRateDate != null)
 	            jsonParsedResponse = {"buy": buyRate, "sell": sellRate, "lastUpdatedAt": (sellRateDate != null ? sellRateDate : buyRateDate), "lastUpdatedSince": (lastUpdatedSinceTimestamp != null ? getElapsedTime(lastUpdatedSinceTimestamp) : null)};
+			else
+				jsonParsedResponse = {"sell": data.sell[data.sell.length - 1][1], "buy": data.buy[data.buy.length - 1][1], "lastUpdatedAt": convertTimeZone(data.buy[data.buy.length - 1][0]), "lastUpdatedSince": getElapsedTime(data.buy[data.buy.length - 1][0])};
         } else {
 			jsonParsedResponse = {"sell": data.sell[data.sell.length - 1][1], "buy": data.buy[data.buy.length - 1][1], "lastUpdatedAt": convertTimeZone(data.buy[data.buy.length - 1][0]), "lastUpdatedSince": getElapsedTime(data.buy[data.buy.length - 1][0])};
 		}
