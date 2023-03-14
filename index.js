@@ -23,7 +23,9 @@ app.get('/lirarate', async (req, res) => {
 		var strMinute = strTime.split(":")[1].split(" ")[0];
 		checkTime = new Date(strYear+"-"+strMonth+"-"+strDay+"T"+strHour+":"+strMinute);
 		*/
+		console.log("checkTime before", checkTime);
 		checkTime = checkTime.replace(" ", "+");
+		console.log("checkTime after", checkTime);
 		checkTime = new Date(checkTime);
 	}
 
